@@ -1,0 +1,85 @@
+# =========================
+# Android / Gradle
+# =========================
+.gradle/
+**/build/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local SDK path
+local.properties
+
+# =========================
+# Android Studio / IntelliJ
+# =========================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# =========================
+# Kotlin
+# =========================
+.kotlin/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Logs / temp
+# =========================
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =========================
+# APK / AAB outputs
+# =========================
+*.apk
+*.aab
+*.apks
+
+# =========================
+# Keystores / signing secrets
+# =========================
+*.jks
+*.keystore
+keystore.properties
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Misc generated files
+# =========================
+*.hprof
+.navigation/
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# =========================
+# Do NOT ignore project web files
+# =========================
+# app/src/main/assets/web/
+# docs/

@@ -1,0 +1,5 @@
+R_DEF: Internal format may change without notice
+local
+id remoteWebView
+layout activity_main
+style Theme.VoltasIRTest

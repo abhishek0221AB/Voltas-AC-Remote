@@ -1,0 +1,22 @@
+const state = { power:false, temperature:24, mode:"COOL", fan:"AUTO", verticalSwing:false, lamp:true, turbo:false, timerOnHours:null, timerOffHours:null };
+const modes=["COOL","DRY","FAN"], fans=["AUTO","LOW","MEDIUM","HIGH"], $=id=>document.getElementById(id);
+function vibrate(){ if(navigator.vibrate) navigator.vibrate(25); }
+function bridgeAvailable(){ return Boolean(window.AndroidIR?.sendState); }
+function sendToIrBridge(action,payload={}){ const message={action,state:{...state},...payload}; console.log("IR command:",message); if(bridgeAvailable()) window.AndroidIR.sendState(JSON.stringify(message)); else updateBridgeStatus("Browser mode: UI works, but IR requires the Android app."); }
+window.updateBridgeStatus=message=>$("bridgeStatus").textContent=message;
+function setDisabled(el,disabled){ el.disabled=disabled; el.setAttribute("aria-disabled",disabled?"true":"false"); }
+function updateControlAvailability(){ const on=state.power; document.querySelectorAll(".ac-control").forEach(el=>setDisabled(el,!on)); ["timerOffHours","setTimerOffBtn","cancelTimerOffBtn"].forEach(id=>setDisabled($(id),!on)); ["timerOnHours","setTimerOnBtn","cancelTimerOnBtn"].forEach(id=>setDisabled($(id),on)); $("timerOffCard").classList.toggle("disabled-card",!on); $("timerOnCard").classList.toggle("disabled-card",on); }
+function render(){
+  $("temperature").textContent=state.temperature; $("powerStatus").textContent=state.power?"ON":"OFF"; $("powerStatus").classList.toggle("off",!state.power); $("modeStatus").textContent=state.mode; $("fanStatus").textContent=state.fan; $("vSwingStatus").textContent=state.verticalSwing?"ON":"OFF"; $("lampStatus").textContent=state.lamp?"ON":"OFF"; $("turboStatus").textContent=state.turbo?"ON":"OFF"; $("timerOnStatus").textContent=state.timerOnHours?`${state.timerOnHours}H`:"OFF"; $("timerOffStatus").textContent=state.timerOffHours?`${state.timerOffHours}H`:"OFF"; $("powerBtn").classList.toggle("power-on",state.power); $("powerBtn").classList.toggle("power-off",!state.power); updateControlAvailability();
+}
+function commit(action,payload={}){ render(); vibrate(); sendToIrBridge(action,payload); }
+$("powerBtn").addEventListener("click",()=>{ state.power=!state.power; commit("power"); });
+document.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>{ if(btn.disabled)return; const action=btn.dataset.action; if(action==="temp-up")state.temperature=Math.min(30,state.temperature+1); if(action==="temp-down")state.temperature=Math.max(16,state.temperature-1); if(action==="mode"){ state.mode=modes[(modes.indexOf(state.mode)+1)%modes.length]; if(state.mode==="DRY"){state.temperature=24;state.fan="LOW";} if(state.mode==="FAN")state.fan="HIGH"; } if(action==="fan")state.fan=fans[(fans.indexOf(state.fan)+1)%fans.length]; if(action==="v-swing")state.verticalSwing=!state.verticalSwing; if(action==="lamp")state.lamp=!state.lamp; if(action==="turbo"){state.turbo=!state.turbo;if(state.turbo)state.mode="COOL";} commit(action); }));
+function populateHours(id){ const select=$(id); for(let h=1;h<=15;h++){ const o=document.createElement("option"); o.value=h; o.textContent=`${h} ${h===1?"hour":"hours"}`; select.appendChild(o);} }
+populateHours("timerOnHours"); populateHours("timerOffHours");
+$("setTimerOnBtn").onclick=()=>{ if($("setTimerOnBtn").disabled)return; const hours=Number($("timerOnHours").value); state.timerOnHours=hours; commit("timer-set",{timerType:"on",hours}); };
+$("cancelTimerOnBtn").onclick=()=>{ if($("cancelTimerOnBtn").disabled)return; state.timerOnHours=null; commit("timer-cancel",{timerType:"on"}); };
+$("setTimerOffBtn").onclick=()=>{ if($("setTimerOffBtn").disabled)return; const hours=Number($("timerOffHours").value); state.timerOffHours=hours; commit("timer-set",{timerType:"off",hours}); };
+$("cancelTimerOffBtn").onclick=()=>{ if($("cancelTimerOffBtn").disabled)return; state.timerOffHours=null; commit("timer-cancel",{timerType:"off"}); };
+$("themeBtn").onclick=()=>{ document.body.classList.toggle("dark"); $("themeBtn").textContent=document.body.classList.contains("dark")?"☀":"☾"; };
+render(); updateBridgeStatus(bridgeAvailable()?"Android IR bridge connected ✓":"Browser mode: UI works, but IR requires the Android app.");
