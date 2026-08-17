@@ -1,0 +1,4 @@
+#Mon Aug 17 06:54:44 IST 2026
+base.0=C\:\\Users\\meghr\\Downloads\\voltas-ac-remote\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

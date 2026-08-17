@@ -6,8 +6,11 @@
 
     <application
         android:allowBackup="true"
-        android:label="Voltas AC Remote"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="AC Remote App"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="false"
         android:theme="@style/Theme.VoltasIRTest">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>

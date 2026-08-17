@@ -3,6 +3,8 @@ package com.example.voltasirtest
 import android.content.Context
 import android.hardware.ConsumerIrManager
 import android.os.Bundle
+import android.net.Uri
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         // Keep blank for the first bridge test. Later put your GitHub Pages URL here.
-        private const val REMOTE_URL = ""
+        private const val REMOTE_URL =
+            "https://abhishek0221ab.github.io/Voltas-AC-Remote/"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,9 +30,35 @@ class MainActivity : AppCompatActivity() {
 
         webView.settings.javaScriptEnabled = true
         webView.settings.domStorageEnabled = true
-        webView.webViewClient = WebViewClient()
-        webView.addJavascriptInterface(IRBridge(this), "AndroidIR")
+        webView.settings.allowFileAccess = false
+        webView.settings.allowContentAccess = false
 
+        webView.settings.javaScriptCanOpenWindowsAutomatically = false
+        webView.settings.setSupportMultipleWindows(false)
+
+        webView.settings.mixedContentMode =
+            android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW
+        webView.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+
+                val url = request.url
+
+                val allowed =
+                    url.scheme == "https" &&
+                            url.host == "abhishek0221ab.github.io" &&
+                            url.path?.startsWith("/Voltas-AC-Remote/") == true
+
+                // false = allow our GitHub Pages site
+                // true  = block everything else
+                return !allowed
+            }
+        }
+        webView.addJavascriptInterface(IRBridge(this), "AndroidIR")
+        webView.loadUrl(REMOTE_URL)
         if (REMOTE_URL.isBlank()) {
             webView.loadUrl("file:///android_asset/web/index.html")
         } else {

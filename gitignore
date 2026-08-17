@@ -2,13 +2,14 @@
 # Android / Gradle
 # =========================
 .gradle/
+.kotlin/
 **/build/
 build/
 captures/
 .externalNativeBuild/
 .cxx/
 
-# Local SDK path
+# Local machine SDK path
 local.properties
 
 # =========================
@@ -21,45 +22,18 @@ local.properties
 out/
 
 # =========================
-# Kotlin
-# =========================
-.kotlin/
-
-# =========================
 # VS Code
 # =========================
 .vscode/
 
 # =========================
-# OS files
-# =========================
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# =========================
-# Logs / temp
-# =========================
-*.log
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-
-# =========================
-# APK / AAB outputs
-# =========================
-*.apk
-*.aab
-*.apks
-
-# =========================
-# Keystores / signing secrets
+# Signing / secrets
+# NEVER commit these
 # =========================
 *.jks
 *.keystore
 keystore.properties
+signing.properties
 
 # =========================
 # Environment / secrets
@@ -69,17 +43,33 @@ keystore.properties
 !.env.example
 
 # =========================
-# Misc generated files
+# Generated Android packages
+# Keep APKs in GitHub Releases instead
 # =========================
-*.hprof
-.navigation/
-lint/intermediates/
-lint/generated/
-lint/outputs/
-lint/tmp/
+*.apk
+*.aab
+*.apks
 
 # =========================
-# Do NOT ignore project web files
+# Logs / temporary files
+# =========================
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.hprof
+
+# =========================
+# Operating system
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Keep these intentionally
 # =========================
 # app/src/main/assets/web/
 # docs/
